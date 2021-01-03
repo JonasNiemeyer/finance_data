@@ -136,12 +136,6 @@ class MacroTrendsScraper:
             else:
                 if self._slider_sensitivity is not None:
                     distance = min(self._cell_width / self._slider_sensitivity * no_cols, self._scrollbar_width)
-                    #try:
-                    #    button_cookies = WebDriverWait(self.driver, 1).until(
-                    #        EC.element_to_be_clickable((By.XPATH, '/html/body/div[6]/div/div[1]'))
-                    #    )
-                    #except:
-                    #    pass
                     self._move_slider(distance)
                     self._scrollbar_width = self._find_scrollbar_width()
             html = self.driver.page_source
