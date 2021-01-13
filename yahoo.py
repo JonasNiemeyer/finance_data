@@ -19,7 +19,7 @@ class YahooPriceReader:
         timestamps = False
     ):
 
-        self.ticker = ticker.replace('.', '-')
+        self.ticker = ticker
         self.start = -int((dt.date(1970, 1, 1) - dt.date.fromisoformat(start)).total_seconds())
         self.end = -int((dt.date(1970, 1, 1) - dt.date.fromisoformat(end)).total_seconds()) + 24 * 3600
 
@@ -50,6 +50,7 @@ class YahooPriceReader:
         if self.data == 'all':
             df = pd.DataFrame()
             for data in ('history', 'div', 'split'):
+
                 url = self.url_format.format(self.ticker, self.start, self.end, self.interval, data)
                 df_temp = requests.get(url).text
                 df_temp = pd.read_csv(StringIO(df_temp))
