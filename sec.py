@@ -51,6 +51,10 @@ class SECFiling:
 		return cls(txt)
 
 	@property
+	def file(self) -> str:
+		return self._file
+
+	@property
 	def name(self) -> str:
 		return self._name
 
@@ -77,7 +81,7 @@ class Filing13F(SECFiling):
 	def __init__(self, file):
 		super(Filing13F, self).__init__(file)
 		self.is_xml = False
-		if '<XML>' in self.file:
+		if '<XML>' in self._file:
 			self.is_xml = True
 
 	def parse(self) -> dict:
@@ -109,7 +113,7 @@ class Filing13F(SECFiling):
 		return holdings
 
 	def _get_holdings_text(self) -> dict:
-		items = re.findall('([0-9A-Za-z]{8,9})0{0,3}\s+\${0,1}\s*(\({0,1}[0-9.,]+\){0,1})\s+\${0,1}\s*([0-9.,\(\)]+)\s+(SH|PRN|CALL|PUT|)(\s+CALL|\s+PUT|\s+|\t)', self.file)
+		items = re.findall('([0-9A-Za-z]{8,9})0{0,3}\s+\${0,1}\s*(\({0,1}[0-9.,]+\){0,1})\s+\${0,1}\s*([0-9.,\(\)]+)\s+(SH|PRN|CALL|PUT|)(\s+CALL|\s+PUT|\s+|\t)', self._file)
 		for item in items:
 			cusip, market_value, no_shares, _type, option = item
 			no_shares = self._convert_number(no_shares)
@@ -134,7 +138,7 @@ class Filing13F(SECFiling):
 		return value
 
 	def _get_quarter(self) -> dict:
-		date = re.findall('CONFORMED PERIOD OF REPORT:\t([0-9]{8})', self.file)[0]
+		date = re.findall('CONFORMED PERIOD OF REPORT:\t([0-9]{8})', self._file)[0]
 		year, month = int(date[:4]), int(date[4:6])
 		quarter = (month - 1) // 3 + 1
 		return {'quarter' : (quarter, year)}
