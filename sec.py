@@ -99,8 +99,8 @@ class Filing13F(SECFiling):
         for (name, cusip, option), (market_value, no_shares) in holdings.items():
             self.holdings['holdings'][cusip] = {}
             self.holdings['holdings'][cusip]['name'] = name
-            self.holdings['holdings'][cusip]['market_value'] = market_value
-            self.holdings['holdings'][cusip]['no_shares'] = no_shares
+            self.holdings['holdings'][cusip]['market_value'] = market_value * 1000
+            self.holdings['holdings'][cusip]['no_shares'] = int(no_shares)
             self.holdings['holdings'][cusip]['option'] = option
         
         self.holdings['no_holdings'] = len(self.holdings['holdings'])
