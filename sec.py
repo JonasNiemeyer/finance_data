@@ -87,11 +87,13 @@ class Filing13F(SECFiling):
     def parse(self) -> dict:
         return {**self._get_quarter, **self.get_holdings}
 
-    def get_holdings(self) -> dict:
+    def get_holdings(self, sort=False) -> dict:
         if self.is_xml is True:
             self.holdings = self._get_holdings_xml()
         else:
             self.holdings = self._get_holdings_text()
+        if sort:
+            holdings = dict(sorted(holdings.items(), key=lambda item: item[1][0], reverse=True))
         return self.holdings
 
     def _get_holdings_xml(self) -> dict:
@@ -112,7 +114,7 @@ class Filing13F(SECFiling):
                     pass
             no_shares = float(no_shares.replace(",",""))
             market_value = float(market_value.replace(",",""))
-            holdings[(cusip, option)] = holdings.get((cusip, option), np.array([0, 0])) + np.array([market_value, no_shares])
+            holdings[(name, cusip, option)] = holdings.get((cusip, option), np.array([0, 0])) + np.array([market_value, no_shares])
         return holdings
 
     def _get_holdings_text(self) -> dict:
