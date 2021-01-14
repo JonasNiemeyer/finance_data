@@ -89,11 +89,23 @@ class Filing13F(SECFiling):
 
     def get_holdings(self, sort=False) -> dict:
         if self.is_xml is True:
-            self.holdings = self._get_holdings_xml()
+            holdings = self._get_holdings_xml()
         else:
-            self.holdings = self._get_holdings_text()
+            holdings = self._get_holdings_text()
         if sort:
-            self.holdings = dict(sorted(self.holdings.items(), key=lambda item: item[1][0], reverse=True))
+            holdings = dict(sorted(holdings.items(), key=lambda item: item[1][0], reverse=True))
+        
+        self.holdings = {'holdings': {}}
+        for (name, cusip, option), (market_value, no_shares) in holdings.items():
+            self.holdings['holdings'][cusip] = {}
+            self.holdings['holdings'][cusip]['name'] = name
+            self.holdings['holdings'][cusip]['market_value'] = market_value
+            self.holdings['holdings'][cusip]['no_shares'] = no_shares
+            self.holdings['holdings'][cusip]['option'] = option
+        
+        self.holdings['no_holdings'] = len(self.holdings['holdings'])
+        self.holdings['portfolio_value'] = sum([value[1]['market_value'] for value in self.holdings['holdings'].items()])
+
         return self.holdings
 
     def _get_holdings_xml(self) -> dict:
