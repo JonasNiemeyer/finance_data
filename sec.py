@@ -93,7 +93,7 @@ class Filing13F(SECFiling):
         else:
             self.holdings = self._get_holdings_text()
         if sort:
-            self.holdings = dict(sorted(holdings.items(), key=lambda item: item[1][0], reverse=True))
+            self.holdings = dict(sorted(self.holdings.items(), key=lambda item: item[1][0], reverse=True))
         return self.holdings
 
     def _get_holdings_xml(self) -> dict:
