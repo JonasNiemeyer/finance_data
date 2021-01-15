@@ -87,13 +87,11 @@ class Filing13F(SECFiling):
     def parse(self) -> dict:
         return {**self._get_quarter, **self.get_holdings}
 
-    def get_holdings(self, sort=False) -> dict:
+    def get_holdings(self, ordered=None) -> dict:
         if self.is_xml is True:
             holdings = self._get_holdings_xml()
         else:
             holdings = self._get_holdings_text()
-        if sort:
-            holdings = dict(sorted(holdings.items(), key=lambda item: item[1][0], reverse=True))
         
         self.holdings = {'holdings': {}}
         for (name, cusip, option), (market_value, no_shares) in holdings.items():
@@ -108,6 +106,15 @@ class Filing13F(SECFiling):
 
         for cusip in self.holdings['holdings']:
             self.holdings['holdings'][cusip]['percentage'] = self.holdings['holdings'][cusip]['market_value'] / self.holdings['portfolio_value']
+
+        if ordered not in (None, "name", "market_value", "no_shares", "percentage", "option"):
+            raise ValueError('ordered argument must be in (None, "name", "market_value", "no_shares", "percentage", "option")')
+
+        if ordered is not None:
+            if ordered == "name":
+                self.holdings['holdings'] = dict(sorted(self.holdings['holdings'].items(), key = lambda item: item[1]["name"]))
+            else:
+                self.holdings['holdings'] = dict(sorted(self.holdings['holdings'].items(), key = lambda item: item[1][ordered], reverse = True))
 
         return self.holdings
 
