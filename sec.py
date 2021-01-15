@@ -106,6 +106,9 @@ class Filing13F(SECFiling):
         self.holdings['no_holdings'] = len(self.holdings['holdings'])
         self.holdings['portfolio_value'] = sum([value[1]['market_value'] for value in self.holdings['holdings'].items()])
 
+        for cusip in self.holdings['holdings']:
+            self.holdings['holdings'][cusip]['percentage'] = self.holdings['holdings'][cusip]['market_value'] / self.holdings['portfolio_value']
+
         return self.holdings
 
     def _get_holdings_xml(self) -> dict:
