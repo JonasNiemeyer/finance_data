@@ -4,9 +4,23 @@ import numpy as np
 import requests
 from io import StringIO
 
+
+class YahooReaderAlt:
+
+    base_url = "https://query1.finance.yahoo.com"
+
+    def __init__(self):
+
+    @property
+    def url(self):
+        return self._url
+
+
 class YahooPriceReader:
 
     url_format = "https://query1.finance.yahoo.com/v7/finance/download/{}?period1={}&period2={}&interval={}&events={}&includeAdjustedClose=true"
+    # https://query1.finance.yahoo.com/v8/finance/chart/{ticker}
+    # https://query1.finance.yahoo.com/v8/finance/chart/AAPL?range=1mo&interval=1d&includePrePost=False&events=div%2Csplits
 
     def __init__(
         self,
@@ -83,3 +97,7 @@ class YahooPriceReader:
             ]
         return df
 
+
+if __name__ == "__main__":
+    data = YahooReaderAlt("AAPL")
+    print(data)
