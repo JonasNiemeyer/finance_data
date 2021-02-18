@@ -146,16 +146,15 @@ class YahooReader:
             ]
         else:
             df.index = df.index.tz_localize("UTC").tz_convert(timezone)
+            if frequency in ("1m", "2m", "5m", "15m", "30m", "60m"):
+                df.index.name = "datetime"
+            else:
+                df.index = pd.to_datetime(df.index.date)
+                df.index.name = "date"
 
         if returns:
             df['simple returns'] = (df['Adj Close'] + df['Dividends'].fillna(0)) / df['Adj Close'].shift(1) - 1
             df['log returns'] = np.log((df['Adj Close'] + df['Dividends'].fillna(0)) / df['Adj Close'].shift(1))
-        
-        if frequency in ("1m", "2m", "5m", "15m", "30m", "60m"):
-            df.index.name = "datetime"
-        else:
-            df.index = pd.to_datetime(df.index.date)
-            df.index.name = "date"
 
         return df
 

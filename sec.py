@@ -87,7 +87,7 @@ class Filing13F(SECFiling):
     def parse(self) -> dict:
         return {**self._get_quarter, **self.get_holdings}
 
-    def get_holdings(self, ordered=None) -> dict:
+    def holdings(self, ordered="percentage") -> dict:
         if self.is_xml is True:
             holdings = self._get_holdings_xml()
         else:
