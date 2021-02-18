@@ -1,4 +1,4 @@
-from finance_data.yahoo import YahooPriceReader, YahooReader
+from finance_data.yahoo import YahooReader
 from finance_data.macrotrends import MacroTrendsScraper
 from finance_data.sec import (
     Filing13F,
